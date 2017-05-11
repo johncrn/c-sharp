@@ -13,6 +13,7 @@ namespace PubnubApi.EndPoint
         private PNConfiguration config = null;
         private IJsonPluggableLibrary jsonLibrary = null;
         private IPubnubUnitTest unit = null;
+        private IPubnubLog pubnubLog = null;
 
         private object msg = null;
         private string channelName = "";
@@ -23,22 +24,23 @@ namespace PubnubApi.EndPoint
         private PNCallback<PNPublishResult> savedCallback = null;
         private bool syncRequest = false;
 
-        public FireOperation(PNConfiguration pubnubConfig) : base(pubnubConfig)
-        {
-            config = pubnubConfig;
-        }
+        //public FireOperation(PNConfiguration pubnubConfig) : base(pubnubConfig)
+        //{
+        //    config = pubnubConfig;
+        //}
 
-        public FireOperation(PNConfiguration pubnubConfig, IJsonPluggableLibrary jsonPluggableLibrary) : base(pubnubConfig, jsonPluggableLibrary, null)
-        {
-            config = pubnubConfig;
-            jsonLibrary = jsonPluggableLibrary;
-        }
+        //public FireOperation(PNConfiguration pubnubConfig, IJsonPluggableLibrary jsonPluggableLibrary) : base(pubnubConfig, jsonPluggableLibrary, null)
+        //{
+        //    config = pubnubConfig;
+        //    jsonLibrary = jsonPluggableLibrary;
+        //}
 
-        public FireOperation(PNConfiguration pubnubConfig, IJsonPluggableLibrary jsonPluggableLibrary, IPubnubUnitTest pubnubUnit) : base(pubnubConfig, jsonPluggableLibrary, pubnubUnit)
+        public FireOperation(PNConfiguration pubnubConfig, IJsonPluggableLibrary jsonPluggableLibrary, IPubnubUnitTest pubnubUnit, IPubnubLog log) : base(pubnubConfig, jsonPluggableLibrary, pubnubUnit, log)
         {
             config = pubnubConfig;
             jsonLibrary = jsonPluggableLibrary;
             unit = pubnubUnit;
+            pubnubLog = log;
         }
 
         public FireOperation Message(object message)
@@ -140,7 +142,7 @@ namespace PubnubApi.EndPoint
             Dictionary<string, string> urlParam = new Dictionary<string, string>();
             urlParam.Add("norep", "true");
 
-            IUrlRequestBuilder urlBuilder = new UrlRequestBuilder(config, jsonLibrary, unit);
+            IUrlRequestBuilder urlBuilder = new UrlRequestBuilder(config, jsonLibrary, unit, pubnubLog);
             Uri request = urlBuilder.BuildPublishRequest(channel, message, storeInHistory, ttl, metaData, httpPost, urlParam);
 
             RequestState<PNPublishResult> requestState = new RequestState<PNPublishResult>();

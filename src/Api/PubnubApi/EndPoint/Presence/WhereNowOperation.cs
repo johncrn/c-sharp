@@ -13,26 +13,28 @@ namespace PubnubApi.EndPoint
         private PNConfiguration config = null;
         private IJsonPluggableLibrary jsonLibrary = null;
         private IPubnubUnitTest unit = null;
+        private IPubnubLog pubnubLog = null;
 
         private string whereNowUUID = "";
         private PNCallback<PNWhereNowResult> savedCallback = null;
 
-        public WhereNowOperation(PNConfiguration pubnubConfig) :base(pubnubConfig)
-        {
-            config = pubnubConfig;
-        }
+        //public WhereNowOperation(PNConfiguration pubnubConfig) :base(pubnubConfig)
+        //{
+        //    config = pubnubConfig;
+        //}
 
-        public WhereNowOperation(PNConfiguration pubnubConfig, IJsonPluggableLibrary jsonPluggableLibrary):base(pubnubConfig, jsonPluggableLibrary, null)
-        {
-            config = pubnubConfig;
-            jsonLibrary = jsonPluggableLibrary;
-        }
+        //public WhereNowOperation(PNConfiguration pubnubConfig, IJsonPluggableLibrary jsonPluggableLibrary):base(pubnubConfig, jsonPluggableLibrary, null)
+        //{
+        //    config = pubnubConfig;
+        //    jsonLibrary = jsonPluggableLibrary;
+        //}
 
-        public WhereNowOperation(PNConfiguration pubnubConfig, IJsonPluggableLibrary jsonPluggableLibrary, IPubnubUnitTest pubnubUnit) : base(pubnubConfig, jsonPluggableLibrary, pubnubUnit)
+        public WhereNowOperation(PNConfiguration pubnubConfig, IJsonPluggableLibrary jsonPluggableLibrary, IPubnubUnitTest pubnubUnit, IPubnubLog log) : base(pubnubConfig, jsonPluggableLibrary, pubnubUnit, log)
         {
             config = pubnubConfig;
             jsonLibrary = jsonPluggableLibrary;
             unit = pubnubUnit;
+            pubnubLog = log;
         }
 
         public WhereNowOperation Uuid(string uuid)
@@ -70,7 +72,7 @@ namespace PubnubApi.EndPoint
                 uuid = config.Uuid;
             }
 
-            IUrlRequestBuilder urlBuilder = new UrlRequestBuilder(config, jsonLibrary, unit);
+            IUrlRequestBuilder urlBuilder = new UrlRequestBuilder(config, jsonLibrary, unit, pubnubLog);
             Uri request = urlBuilder.BuildWhereNowRequest(uuid);
 
             RequestState<PNWhereNowResult> requestState = new RequestState<PNWhereNowResult>();

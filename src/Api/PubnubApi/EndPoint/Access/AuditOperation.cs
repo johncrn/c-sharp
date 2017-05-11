@@ -13,27 +13,30 @@ namespace PubnubApi.EndPoint
         private PNConfiguration config = null;
         private IJsonPluggableLibrary jsonLibrary = null;
         private IPubnubUnitTest unit;
+        private IPubnubLog pubnubLog = null;
+
         private string channelName = null;
         private string channelGroupName = null;
         private string[] authenticationKeys = null;
         private PNCallback<PNAccessManagerAuditResult> savedCallback = null;
 
-        public AuditOperation(PNConfiguration pubnubConfig):base(pubnubConfig)
-        {
-            config = pubnubConfig;
-        }
+        //public AuditOperation(PNConfiguration pubnubConfig):base(pubnubConfig)
+        //{
+        //    config = pubnubConfig;
+        //}
 
-        public AuditOperation(PNConfiguration pubnubConfig, IJsonPluggableLibrary jsonPluggableLibrary):base(pubnubConfig, jsonPluggableLibrary, null)
-        {
-            config = pubnubConfig;
-            jsonLibrary = jsonPluggableLibrary;
-        }
+        //public AuditOperation(PNConfiguration pubnubConfig, IJsonPluggableLibrary jsonPluggableLibrary):base(pubnubConfig, jsonPluggableLibrary, null)
+        //{
+        //    config = pubnubConfig;
+        //    jsonLibrary = jsonPluggableLibrary;
+        //}
 
-        public AuditOperation(PNConfiguration pubnubConfig, IJsonPluggableLibrary jsonPluggableLibrary, IPubnubUnitTest pubnubUnit) : base(pubnubConfig, jsonPluggableLibrary, pubnubUnit)
+        public AuditOperation(PNConfiguration pubnubConfig, IJsonPluggableLibrary jsonPluggableLibrary, IPubnubUnitTest pubnubUnit, IPubnubLog log) : base(pubnubConfig, jsonPluggableLibrary, pubnubUnit, log)
         {
             config = pubnubConfig;
             jsonLibrary = jsonPluggableLibrary;
             unit = pubnubUnit;
+            pubnubLog = log;
         }
 
         public AuditOperation Channel(string channel)
@@ -80,7 +83,7 @@ namespace PubnubApi.EndPoint
 
             string authKeysCommaDelimited = (authKeys != null && authKeys.Length > 0) ? string.Join(",", authKeys.OrderBy(x => x).ToArray()) : "";
 
-            IUrlRequestBuilder urlBuilder = new UrlRequestBuilder(config, jsonLibrary, unit);
+            IUrlRequestBuilder urlBuilder = new UrlRequestBuilder(config, jsonLibrary, unit, pubnubLog);
             Uri request = urlBuilder.BuildAuditAccessRequest(channel, channelGroup, authKeysCommaDelimited);
 
             RequestState<PNAccessManagerAuditResult> requestState = new RequestState<PNAccessManagerAuditResult>();
